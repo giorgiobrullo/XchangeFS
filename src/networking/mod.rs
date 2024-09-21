@@ -1,7 +1,7 @@
 pub mod address;
 pub mod identity;
-pub mod kademlia; // Add a new module for Kademlia
-pub mod swarm; // Optional, if you decide to separate address parsing
+pub mod swarm;
+pub mod behavior;
 
 use identity::load_or_generate_identity;
 use std::{error::Error, path::PathBuf};

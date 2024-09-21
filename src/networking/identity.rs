@@ -2,6 +2,7 @@ use std::{error::Error, fs, path::PathBuf};
 use libp2p::identity;
 use tracing::info;
 
+
 // Load the keypair from disk or generate a new one if it doesn't exist
 pub fn load_or_generate_identity(data_dir : PathBuf) -> Result<identity::Keypair, Box<dyn Error>> {
     let path = get_keypair_file_path(data_dir)?;
