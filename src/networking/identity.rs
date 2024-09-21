@@ -1,11 +1,10 @@
-use std::{fs, error::Error, path::PathBuf};
+use std::{error::Error, fs, path::PathBuf};
 use libp2p::identity;
-use dirs::data_dir;
 use tracing::info;
 
 // Load the keypair from disk or generate a new one if it doesn't exist
-pub fn load_or_generate_identity() -> Result<identity::Keypair, Box<dyn Error>> {
-    let path = get_keypair_file_path()?;
+pub fn load_or_generate_identity(data_dir : PathBuf) -> Result<identity::Keypair, Box<dyn Error>> {
+    let path = get_keypair_file_path(data_dir)?;
 
     if path.exists() {
         // Load the keypair from file
@@ -24,13 +23,11 @@ pub fn load_or_generate_identity() -> Result<identity::Keypair, Box<dyn Error>> 
 }
 
 // Get the path to store the keypair, cross-platform
-fn get_keypair_file_path() -> Result<PathBuf, Box<dyn Error>> {
-    let mut path = data_dir().ok_or("Could not find data directory")?;
-    path.push("XchangeFS"); // You can name this directory however you like
-    fs::create_dir_all(&path)?; // Create the directory if it doesn't exist
-    path.push("identity_keypair"); // The keypair file
+fn get_keypair_file_path(data_dir: PathBuf) -> Result<PathBuf, Box<dyn Error>> {
+    fs::create_dir_all(&data_dir)?; // Create the directory if it doesn't exist
+    let id : PathBuf = data_dir.clone().join("identity_keypair"); // The keypair file
 
-    Ok(path)
+    Ok(id)
 }
 
 

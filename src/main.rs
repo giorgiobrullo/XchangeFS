@@ -9,7 +9,7 @@ pub async fn main() -> () {
     tracing::info!("Starting XchangeFS node...");
 
     // Start the networking module
-    let network = networking::Network::new(xchangefs::networking::NetworkConfig { listen_addr: config.listen_addr });
+    let network = networking::Network::new(xchangefs::networking::NetworkConfig { listen_addr: config.listen_addr, data_dir: config.data_dir });
 
     if let Err(e) = network.start().await {
         tracing::error!("Networking module failed: {:?}", e);
