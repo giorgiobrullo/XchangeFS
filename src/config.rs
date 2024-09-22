@@ -1,15 +1,16 @@
 use config::{Config, Environment, File as ConfigFile};
-use dirs::data_dir;
+use dirs::{data_dir, home_dir};
 use serde::{Deserialize, Serialize};
 use std::{error::Error, path::PathBuf};
-use tracing::{info};
+use tracing::info;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(default)] // This will apply default values for missing fields
 pub struct AppConfig {
-    pub data_dir: PathBuf,
-    pub listen_addr: Vec<String>,
-    pub idle_timeout_secs: u64,
+    pub data_dir: PathBuf, // Where to store XchageFS's data configs
+    pub listen_addr: Vec<String>, // Where the libp2p node should listen for connections
+    pub mount_path: PathBuf, // Where to mount the filesystem that (eventually) will be shared
+    pub idle_timeout_secs: u64, // TODO: Ping-specific, to remove
 }
 
 impl Default for AppConfig {
@@ -20,6 +21,7 @@ impl Default for AppConfig {
         AppConfig {
             data_dir: default_data_dir,
             listen_addr: vec!["0.0.0.0:0".to_string()],
+            mount_path: home_dir().unwrap().join("XchangeFS"),
             idle_timeout_secs: 300,
         }
     }
@@ -76,3 +78,4 @@ mod tests {
         assert_eq!(config.idle_timeout_secs, 300);
     }
 }
+

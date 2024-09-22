@@ -1,5 +1,6 @@
 use libp2p::swarm::NetworkBehaviour;
-use libp2p::{autonat, identify, kad, mdns, ping};
+use libp2p::{//autonat,
+     identify, kad, mdns, ping};
 use libp2p::kad::store::MemoryStore;
 use libp2p::{PeerId, identity::Keypair};
 use std::error::Error;
@@ -10,7 +11,7 @@ pub struct MyBehaviour {
     pub kademlia: kad::Behaviour<MemoryStore>,
     pub mdns: mdns::async_io::Behaviour,
     pub identity: identify::Behaviour,
-    pub autonat: autonat::Behaviour
+   // pub autonat: autonat::Behaviour
 }
 
 pub fn create_behaviour(
@@ -22,7 +23,7 @@ pub fn create_behaviour(
     let kademlia = kad::Behaviour::new(local_peer_id, MemoryStore::new(local_peer_id));
     let mdns = mdns::async_io::Behaviour::new(mdns::Config::default(), local_peer_id)?;
     let identity = identify::Behaviour::new(identify::Config::new("xchangefs/0.0.1".to_string(), local_keypair.public()));
-    let autonat = autonat::Behaviour::new(local_peer_id, autonat::Config::default());
+    //let autonat = autonat::Behaviour::new(local_peer_id, autonat::Config::default());
 
 
     Ok(MyBehaviour {
@@ -30,6 +31,6 @@ pub fn create_behaviour(
         kademlia,
         mdns,
         identity,
-        autonat
+       // autonat //TODO: AutoNAT has no way to find servers, so it just fails
     })
 }

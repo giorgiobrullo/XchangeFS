@@ -5,7 +5,7 @@ pub mod behavior;
 
 use identity::load_or_generate_identity;
 use std::{error::Error, path::PathBuf};
-use tracing::info;
+use tracing::{error, info};
 
 // Define a configuration struct for the network module
 pub struct NetworkConfig {
@@ -31,7 +31,12 @@ impl Network {
             load_or_generate_identity(self.config.data_dir.clone())?,
         )
         .await?;
-        swarm::run_swarm(swarm).await?;
+
+        tokio::spawn(async move {
+            if let Err(e) = swarm::run_swarm(swarm).await {
+            error!("Error running swarm: {:?}", e);
+            }
+        });
 
         Ok(())
     }

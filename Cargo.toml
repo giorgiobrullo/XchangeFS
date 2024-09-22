@@ -1,6 +1,6 @@
 [package]
 name = "XchangeFS"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 
 [dependencies]
@@ -11,6 +11,8 @@ tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 dirs = "5"
 config = "0.14"
 serde = { version = "1.0", features = ["derive"] }
+fuser = "0.14"
+libc = "0.2"
 
 [dev-dependencies]
 tempfile = "3.12"
