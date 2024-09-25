@@ -8,7 +8,8 @@ pub fn parse_listen_address(addr_str: &str) -> Result<Multiaddr, Box<dyn std::er
         return Err(format!("Invalid address format: {addr_str}").into());
     }
 
-    let ip = parts[1];
+    // Remove [] for IPv6 addresses
+    let ip = parts[1].trim_start_matches('[').trim_end_matches(']');
     let port: u16 = parts[0].parse()?;
 
     if let Ok(ip4) = ip.parse::<Ipv4Addr>() {
