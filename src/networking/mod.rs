@@ -2,7 +2,7 @@ pub mod address;
 pub mod identity;
 pub mod swarm;
 pub mod behavior;
-pub mod protocol;
+//pub mod protocol;
 
 use identity::load_or_generate_identity;
 use std::{error::Error, path::PathBuf};
