@@ -4,6 +4,10 @@ use serde::{Deserialize, Serialize};
 use std::{error::Error, path::PathBuf};
 use tracing::info;
 
+use crate::constants::{DEFAULT_DATA_DIR, DEFAULT_IDLE_TIMEOUT_SECS, DEFAULT_LISTEN_ADDR, DEFAULT_MOUNT_PATH};
+
+// Define constants for default values
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(default)] // This will apply default values for missing fields
 pub struct AppConfig {
@@ -17,12 +21,13 @@ impl Default for AppConfig {
     fn default() -> Self {
         let default_data_dir = data_dir()
             .unwrap_or_else(|| PathBuf::from("/tmp"))
-            .join("XchangeFS");
+            .join(DEFAULT_DATA_DIR); // Use constant for default data dir
+
         AppConfig {
             data_dir: default_data_dir,
-            listen_addr: vec!["0.0.0.0:0".to_string()],
-            mount_path: home_dir().unwrap().join("XchangeFS"),
-            idle_timeout_secs: 300,
+            listen_addr: vec![DEFAULT_LISTEN_ADDR.to_string()], // Use constant for listen address
+            mount_path: home_dir().unwrap().join(DEFAULT_MOUNT_PATH), // Use constant for default mount path
+            idle_timeout_secs: DEFAULT_IDLE_TIMEOUT_SECS, // Use constant for idle timeout
         }
     }
 }
@@ -30,9 +35,10 @@ impl Default for AppConfig {
 impl AppConfig {
     pub fn new() -> Result<Self, Box<dyn Error>> {
         // Initialize the config with defaults
-        let mut settings = Config::builder().set_default("data_dir", AppConfig::default().data_dir.to_str().unwrap())?
-                                           .set_default("listen_addr", AppConfig::default().listen_addr.clone())?
-                                           .set_default("idle_timeout_secs", AppConfig::default().idle_timeout_secs)?;
+        let mut settings = Config::builder()
+            .set_default("data_dir", AppConfig::default().data_dir.to_str().unwrap())?
+            .set_default("listen_addr", AppConfig::default().listen_addr.clone())?
+            .set_default("idle_timeout_secs", AppConfig::default().idle_timeout_secs)?;
 
         // Optionally load configuration from a file if specified
         if let Some(config_path) = std::env::var("XCHANGEFS__CONFIG").ok() {
@@ -72,10 +78,9 @@ mod tests {
             config.data_dir,
             data_dir()
                 .unwrap_or_else(|| PathBuf::from("/tmp"))
-                .join("XchangeFS")
+                .join(DEFAULT_DATA_DIR) // Use constant in test
         );
-        assert_eq!(config.listen_addr, vec!["0.0.0.0:8080".to_string()]);
-        assert_eq!(config.idle_timeout_secs, 300);
+        assert_eq!(config.listen_addr, vec![DEFAULT_LISTEN_ADDR.to_string()]); // Use constant in test
+        assert_eq!(config.idle_timeout_secs, DEFAULT_IDLE_TIMEOUT_SECS); // Use constant in test
     }
 }
-

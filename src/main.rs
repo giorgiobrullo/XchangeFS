@@ -21,7 +21,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     // Perform graceful shutdown of the network and filesystem modules
     shutdown_filesystem(fs)?;
 
-    tracing::info!("XchangeFS node shut down gracefully.");
+    tracing::info!("XchangeFS node shut down gracefully. See you soon!");
     Ok(())
 }
 
