@@ -19,9 +19,6 @@ XchangeFS allows users to "exchange" disk space on their local system for space 
 Before installing XchangeFS, ensure you have the following prerequisites:
 
 - **Rust**: Install Rust from [rust-lang.org](https://www.rust-lang.org/).
-- **FUSE**: Install FUSE for your respective platform if needed.
-    - macOS: [osxfuse](https://osxfuse.github.io/)
-    - Windows: [winfsp](http://www.secfs.net/winfsp/)
 
 ## Building from Source
 

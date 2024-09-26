@@ -1,4 +1,4 @@
-use xchangefs::{config, logger, networking, filesystem};
+use xchangefs::{config, logger, networking};
 use std::error::Error;
 
 #[tokio::main]
@@ -13,13 +13,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     // Start the networking and filesystem modules
     let _network = start_networking(&config).await?;
-    let fs = start_filesystem(&config)?;
 
     // Wait for the Ctrl+C shutdown signal
     wait_for_shutdown_signal().await;
-
-    // Perform graceful shutdown of the network and filesystem modules
-    shutdown_filesystem(fs)?;
 
     tracing::info!("XchangeFS node shut down gracefully. See you soon!");
     Ok(())
@@ -45,25 +41,6 @@ async fn start_networking(config: &config::AppConfig) -> Result<networking::Netw
     Ok(network)
 }
 
-// Start the filesystem module
-fn start_filesystem(config: &config::AppConfig) -> Result<filesystem::NoSpaceFs, Box<dyn Error>> {
-    let mut fs = filesystem::NoSpaceFs::new(filesystem::FilesystemConfig {
-        mount_path: config.mount_path.clone(),
-    });
-
-    fs.mount()?;
-    tracing::info!("Filesystem module started successfully!");
-
-    Ok(fs)
-}
-
-// Shutdown the filesystem module gracefully
-fn shutdown_filesystem(mut fs: filesystem::NoSpaceFs) -> Result<(), Box<dyn Error>> {
-    tracing::info!("Shutting down filesystem module...");
-    fs.unmount()?; // Assuming an unmount method exists
-    tracing::info!("Filesystem module shut down.");
-    Ok(())
-}
 
 // Wait for the shutdown signal (Ctrl+C)
 async fn wait_for_shutdown_signal() {
